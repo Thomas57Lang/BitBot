@@ -28,7 +28,7 @@ class LogCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if (message.author != 'BitBot#7978'):
+        if (message.author != self.bot.user):
             self.user_append_log(message.content)
         else:
             self.assistant_append_log(message.content)
