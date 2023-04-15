@@ -10,3 +10,6 @@ ENV/
 env.bak/
 venv.bak/
 Logs
+__pycache__/gptcog.cpython-310.pyc
+.gitignore
+__pycache__/logcog.cpython-310.pyc
