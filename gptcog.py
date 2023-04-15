@@ -51,6 +51,15 @@ class GPTCog(commands.Cog):
         assistantmsg = GPTCog.assistant_message(completion.choices[0].message.content)
         self.messages.append(assistantmsg)
         totaltk = completion.usage.total_tokens
+        if (totaltk > 3500):
+            print('Total tokens used exceeded 3500, clearing message memory.')
+            self.messages.clear()
+            self.messages = [
+            {
+                "role": "system", 
+                "content": "You are a chatbot running in a discord server. Your name is bb which is short for BitBot."
+            }
+        ]
         print(f'Total tokens used: {totaltk}')
         return completion.choices[0].message.content
         
