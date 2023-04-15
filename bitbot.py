@@ -19,6 +19,7 @@ class BitBot(commands.Bot):
     async def ready(self):
         await self.load_extension("logcog")
         await self.load_extension("gptcog")
+        await self.load_extension("weathercog")
         print(f'{self.user} has connected to Discord!')
         guild = discord.utils.get(self.guilds)
         print(f'Bitbot is connected to {guild}')
