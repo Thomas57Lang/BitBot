@@ -6,10 +6,6 @@ from datetime import datetime
 
 class BitBot(commands.Bot):
 
-    # def __init__(self):
-    #     self.bot = commands.Bot(command_prefix='bb!', intents=BitBot.intents, case_insensitive=True)
-    #     #self.bot.connect()
-    #     #self.bot = commands.Bot(command_prefix='bb!', intents=BitBot.intents) 
     async def bb_command(self, content):
         if (len(content) < 2):
             return "It appears you didn't include any commands."
