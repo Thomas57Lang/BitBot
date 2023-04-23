@@ -13,3 +13,4 @@ Logs
 __pycache__/gptcog.cpython-310.pyc
 .gitignore
 __pycache__/logcog.cpython-310.pyc
+.DS_Store

@@ -13,6 +13,10 @@ class BitBot(commands.Bot):
             return "Available commands: \n -h For assistance using bb use this command to see a list of available commands. \n -i Generates an image based on the user provided prompt."
         elif (content[:2] == '-i'):
             return await self.get_cog("GPTCog").generate_image(content[2:])
+        elif (content[:4] == 'join'):
+            return "Attempting to join voice channel."
+        elif (content[:5] == 'leave'):
+            return "Attempting to leave voice channel."
         else:
             return await self.get_cog("GPTCog").contact_gpt(content, 'user')
 
@@ -30,6 +34,23 @@ intents = discord.Intents.default()
 intents.message_content = True
 bb = BitBot(command_prefix='bb! ', intents=intents, case_insensitive=True)
 
+@bb.command()
+async def join(ctx):
+    if not ctx.message.author.voice:
+        await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
+        return
+    else:
+        channel = ctx.message.author.voice.channel
+    await channel.connect()
+
+@bb.command()
+async def leave(ctx):
+    voice_client = ctx.message.guild.voice_client
+    if voice_client.is_connected():
+        await voice_client.disconnect()
+    else:
+        await ctx.send("The bot is not connected to a voice channel.")
+
 @bb.event
 async def on_ready():
     await bb.ready()
@@ -40,6 +61,7 @@ async def on_message(message):
         return
     if message.content.startswith('bb!'):
         print(f'{datetime.now()} -- User:{message.author} invoked bitbot command -- {message.content}')
+        await bb.process_commands(message)
         response = await bb.bb_command(message.content[4:])
         await message.channel.send(response)
 
