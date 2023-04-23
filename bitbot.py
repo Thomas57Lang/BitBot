@@ -3,8 +3,16 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime
+from gtts import gTTS
 
 class BitBot(commands.Bot):
+
+    async def text_to_speech(self, content):
+        voice = self.voice_clients[0]
+        tts = gTTS(content)
+        tts.save('hello.mp3')
+        print('Attempting to talk in voice channel')
+        voice.play(discord.FFmpegPCMAudio('hello.mp3'))
 
     async def bb_command(self, content):
         if (len(content) < 2):
@@ -18,7 +26,10 @@ class BitBot(commands.Bot):
         elif (content[:5] == 'leave'):
             return "Attempting to leave voice channel."
         else:
-            return await self.get_cog("GPTCog").contact_gpt(content, 'user')
+            response = await self.get_cog("GPTCog").contact_gpt(content, 'user')
+            if (len(self.voice_clients) > 0):
+                await self.text_to_speech(response)
+            return response
 
     async def ready(self):
         await self.load_extension("logcog")
@@ -41,7 +52,8 @@ async def join(ctx):
         return
     else:
         channel = ctx.message.author.voice.channel
-    await channel.connect()
+    voice = await channel.connect()
+
 
 @bb.command()
 async def leave(ctx):
@@ -50,6 +62,13 @@ async def leave(ctx):
         await voice_client.disconnect()
     else:
         await ctx.send("The bot is not connected to a voice channel.")
+
+# @bb.command()
+# async def talk(ctx):
+#     voice = ctx.message.guild.voice_client
+#     tts = gTTS('hello I am bb. How can I help?')
+#     tts.save('hello.mp3')
+#     voice.play(discord.FFmpegPCMAudio('hello.mp3'))
 
 @bb.event
 async def on_ready():
