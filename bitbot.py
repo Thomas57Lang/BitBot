@@ -1,9 +1,11 @@
 import os
+import logging
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime
 from gtts import gTTS
+
 
 class BitBot(commands.Bot):
 
@@ -38,6 +40,9 @@ class BitBot(commands.Bot):
         print(f'{self.user} has connected to Discord!')
         guild = discord.utils.get(self.guilds)
         print(f'Bitbot is connected to {guild}')
+
+
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 
 load_dotenv()
 discord_token = os.getenv('DISCORD')
@@ -84,4 +89,4 @@ async def on_message(message):
         response = await bb.bb_command(message.content[4:])
         await message.channel.send(response)
 
-bb.run(discord_token)
+bb.run(discord_token, log_handler=handler)
